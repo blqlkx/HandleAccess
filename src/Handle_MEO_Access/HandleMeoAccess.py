@@ -28,10 +28,7 @@ def LineSplit(line):
 def SingleLine(nodes, Linesplit):
     Singlelines = []
     rec = list(nodes) + list(LineSplit(Linesplit))
-    for i, r in enumerate(rec):
-        rec[i] = r.strip()
-    Singlelines.append(rec[1:])                     #CHANGE HERE!!
-    return Singlelines
+    return nodes + list(LineSplit(Linesplit))
 
 
 def HandleSources(llines):
