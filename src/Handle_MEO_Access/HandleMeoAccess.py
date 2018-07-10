@@ -26,9 +26,7 @@ def LineSplit(line):
 
 
 def SingleLine(nodes, Linesplit):
-    Singlelines = []
-    rec = list(nodes) + list(LineSplit(Linesplit))
-    return nodes + list(LineSplit(Linesplit))
+    return nodes[0] + list(LineSplit(Linesplit))
 
 
 def HandleSources(llines):
