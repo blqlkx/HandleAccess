@@ -1,4 +1,4 @@
-
+from operator import itemgetter, attrgetter
 import sys
 import os
 from datetime import datetime
@@ -26,7 +26,7 @@ def LineSplit(line):
 
 
 def SingleLine(nodes, Linesplit):
-    return nodes[0] + list(LineSplit(Linesplit))
+    return list(nodes) + list(LineSplit(Linesplit))
 
 
 def HandleSources(llines):
@@ -49,11 +49,9 @@ def HandleSelectedSources(selected_sources):
             n = edSource.strip()
             nodeslines.append(n.split("-To-"))
         elif edSource.startswith("                  "):
-            FormLines.append(SingleLine(nodeslines, edSource))
+            FormLines.append(SingleLine(nodeslines[-1], edSource))
         else:
             continue
-
-
     return FormLines
 
 
@@ -63,23 +61,32 @@ def get_access_pairs():
     pair_files = os.listdir(DATA_PATH)
     os.chdir(DATA_PATH)
     source = []
-    source_2nd = []
 
 
     for pair_file in pair_files:
         if pair_file.endswith("txt"):
             f = open(pair_file, "r")
             SourceLines = f.readlines()
-
             SingleSatelliteLinks = HandleSources(SourceLines)
             f.close()
 
-            # write
-            # with open(SAVED_FILE, 'a+') as f:
-            #     f.writelines(SingleSatelliteLinks)
+            FormLines = HandleSelectedSources(SingleSatelliteLinks)
+            Form = sorted(FormLines, key=itemgetter(2, 1, 3))
+            source.append(Form)
 
-            source = SingleSatelliteLinks[:]
-            source_2nd = HandleSelectedSources(SingleSatelliteLinks)
+
+            # for s in source:
+            #     print(s)
+
+            #write
+            with open(SAVED_FILE, 'a+') as f:
+                for s in Form:
+                    sStr = ""
+                    for i in s:
+                        sStr = sStr + "%s "%i
+                    f.write(sStr)
+                    f.write('\n')
+
 
     os.chdir("..")
 
@@ -97,3 +104,4 @@ if __name__ == '__main__':
     sitem = get_access_pairs()
     for s in sitem:
         print(s)
+
